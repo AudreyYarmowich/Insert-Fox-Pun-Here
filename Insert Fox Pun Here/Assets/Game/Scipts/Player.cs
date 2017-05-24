@@ -13,21 +13,21 @@ public class Player : MonoBehaviour {
 	public bool facingLeft = true;
 
 	private Rigidbody2D body2D;
-	private SpriteRenderer renderer2D;
+	//private SpriteRenderer renderer2D;
 	private PlayerController controller;
-	private Transform transform;
+	private PolygonCollider2D collide;
 
 	private Animator animator;
 
 	// Use this for initialization
 	void Start () {
 		body2D = GetComponent<Rigidbody2D> ();
-		renderer2D = GetComponent<SpriteRenderer> ();
+		//renderer2D = GetComponent<SpriteRenderer> ();
 		controller = GetComponent<PlayerController> ();
 		animator = GetComponent<Animator> ();
-		transform = GetComponent<Transform> ();
+		collide = GetComponent<PolygonCollider2D> ();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		var absVelX = Mathf.Abs (body2D.velocity.x);
@@ -44,16 +44,18 @@ public class Player : MonoBehaviour {
 
 		if (controller.moving.x != 0) {
 			if (absVelX < maxVeloxity.x) {
-				
+
 				var newSpeed = speed * controller.moving.x;
 
 				forceX = standing ? newSpeed : (newSpeed * airSpeedMultiplier);
 				if (forceX > 0 && facingLeft) {
-					transform.RotateAround (Vector3.zero, Vector3.up, 180f); 
+					collide.transform.RotateAround (transform.localPosition, Vector3.up, 180);
+					print (1);
 					facingLeft = false;
 				} else if (forceX < 0 && !facingLeft){
-					transform.RotateAround (Vector3.zero, Vector3.up, 180f);  
+					collide.transform.RotateAround (transform.localPosition, Vector3.up, 180);
 					facingLeft = true;
+					print (2);
 				}
 
 			}
@@ -61,20 +63,20 @@ public class Player : MonoBehaviour {
 			animator.SetInteger ("AnimState", 1);
 
 		} else {
-			
+
 			animator.SetInteger ("AnimState", 0);
 
 		}
 
 		if (controller.moving.y > 0) {
 			if (absVelY < maxVeloxity.y) {
-				//body2D.AddForce (new Vector2 (0, 10), ForceMode2D.Impulse);
+				forceY = jetSpeed;
 			}
 
 			animator.SetInteger ("AnimState", 2);
 
 		} 
-
+		print (forceX + " , " + forceY);
 		body2D.AddForce(new Vector2(forceX, forceY));
 	}
 }
