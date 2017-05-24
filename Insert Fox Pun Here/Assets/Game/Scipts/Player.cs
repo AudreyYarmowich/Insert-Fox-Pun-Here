@@ -27,7 +27,7 @@ public class Player : MonoBehaviour {
 		animator = GetComponent<Animator> ();
 		collide = GetComponent<PolygonCollider2D> ();
 	}
-
+	
 	// Update is called once per frame
 	void Update () {
 		var absVelX = Mathf.Abs (body2D.velocity.x);
@@ -44,7 +44,7 @@ public class Player : MonoBehaviour {
 
 		if (controller.moving.x != 0) {
 			if (absVelX < maxVeloxity.x) {
-
+				
 				var newSpeed = speed * controller.moving.x;
 
 				forceX = standing ? newSpeed : (newSpeed * airSpeedMultiplier);
@@ -63,7 +63,7 @@ public class Player : MonoBehaviour {
 			animator.SetInteger ("AnimState", 1);
 
 		} else {
-
+			
 			animator.SetInteger ("AnimState", 0);
 
 		}
